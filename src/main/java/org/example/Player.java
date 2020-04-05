@@ -2,7 +2,7 @@ package org.example;
 
 import java.util.*;
 
-public class Player implements Runnable {
+public abstract class Player implements Runnable {
     String name;
     Board board;
     int k;
@@ -16,26 +16,28 @@ public class Player implements Runnable {
     }
 
     /**
-     * functia run va fi executata in firul de executie ce va fi creat
-     * intr o bucla jucatorul continua sa ceara tokenuri
-     * dupa ficare token primit verifica daca are o progresie si daca are isi incheie executia firului prin exit
-     * daca functia arithmP() intoarece true atunci trmitie numele la board si isi incheie executia
-     * daca primeste null de la board.giveTok() isi incheie executia deoarece board ul nu mai are tokenuri
+     * ruleaza pana i se intoarce null semn ca jocul s a terminat sau ca a treut perioada de timp setata de clasa TimeKeper
+     * pentru a marca cine a iesit se printeza numele si mesajul "voi iesi"
      */
-    public void run() {
+  public void run() {
 
         while(true){
-            Token tok=board.giveTok(null);
-            if(tok==null){
-                System.exit(0);
-            }
-            myTokens.add(tok);
-            if(arithmP() ){
-                board.giveTok(name);
-                System.exit(1);
+
+            try {
+                if (getTok()==null) break;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
+      System.out.println(name+"voi iesi");
     }
+
+    /**
+     * functia care cere un token suprascrisa in functie de clasa care extinde
+     * @return noul token primit
+     * @throws InterruptedException
+     */
+    abstract Token getTok() throws InterruptedException ;
 
     /**
      * ce ordoneaza elementele din lista
@@ -44,7 +46,7 @@ public class Player implements Runnable {
      */
     boolean arithmP()
     {
-        if(myTokens.size()<3)
+        if(myTokens.size()<k)
             return false;
         Collections.sort(myTokens,new NumberComp());
         int d =  myTokens.get(1).number-myTokens.get(0).number;

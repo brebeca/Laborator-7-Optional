@@ -13,7 +13,9 @@ public class App
         nume.add("Ply2");
         nume.add("Ply3");
         nume.add("Ply4");
-        Game game= new Game(20,4,nume,5);
-        game.startGame();
+        Game game= new Game(20,"Smart1","Smart2",5);
+        Game game2= new Game(20,4,nume,5);
+
+        game2.startGame();
     }
 }
